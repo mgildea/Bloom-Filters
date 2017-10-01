@@ -24,11 +24,15 @@ class HashType1(object):
         self.k = config['k']
         self.n = config['n']
         #set random seed to be generated seed at config load
-        random.seed(config['genSeed'])
+        #random.seed(config['genSeed'])
         #if generate new random hashes
         if genHashes :
+             #set random seed to be generated seed at config load
+            random.seed(config['genSeed'])
+            self.seeds = random.randint(config['N'], size=self.k)
+          
             #build seed list self.seeds
-            pass
+            #pass
         #if not gen (task 2), then use hashes that are in config dictionary
         else :
             self.seeds = config['seeds']
@@ -42,7 +46,12 @@ class HashType1(object):
         Returns list of k hashes of this element
         """
         res = []
-        
+
+        for seed in self.seeds:
+            random.seed(seed + x)
+            
+        res = random.randint(self.n, size=self.k)
+
         #your code goes here
         return res
 
@@ -61,11 +70,15 @@ class HashType2(object):
         self.k = config['k']
         self.n = config['n']
         self.N = config['N']
+        self.P = util.findNextPrime(self.N)
         #generate new random hashes, or not if task2
         if genHashes :
             #set random seed to be generated seed at config load
             random.seed(config['genSeed'])
             #build lists of coefficients self.a and self.b
+
+            self.a = random.randint(1, config['N'], size=self.k)
+            self.b = random.randint(0, config['N'], size=self.k)
 
         #if not gen (task 2), then use hashes that are in config dictionary
         else :
@@ -84,7 +97,11 @@ class HashType2(object):
         Returns list of k hashes of this element
         """
         res = []
+    
+        for a,b in zip(self.a, self.b):
+            random.seed((((a * x) + b) % self.P) % self.n)
         
+        res = random.randint(self.n, size=self.k)
         #your code goes here
         return res
     
@@ -130,19 +147,15 @@ class BloomFilter(object):
             
         
         #your code goes here
-
+        self.table = [False] * config['n']
 
     def add(self, x):
         """Adds x to the data structure, using self.hashFunc     
         Args:
             x (int): The integer to add to the bloom filter
         """
-                
-        
-        
-        #your code goes here
-        
-        pass
+        for h in self.hashFunc.getHashList(x):
+            self.table[h] = True
     
 
     def contains(self, x):
@@ -154,12 +167,11 @@ class BloomFilter(object):
             True or False whether structure contains x or not
         """
                 
+        for h in self.hashFunc.getHashList(x):
+            if(not self.table[h]):
+                return False
         
-        
-        
-        #your code goes here
-        
-        return False
+        return True
 
 
 
@@ -218,7 +230,27 @@ def task1(configData):
     #if you wish to use this code to perform task 1, you may do so
     #NOTE : task 1 does not require you to instantiate a bloom filter
     
-    
+    #hashFunc1 = HashType1(configData, True)
+    #hashFunc2 = HashType2(configData, True)
+
+   # hashes1 = hashFunc1.getHashList(40)
+   # hashes2 = hashFunc2.getHashList(40)
+
+    ''' bf = BloomFilter(configData)    
+
+    #bfInputData holds a list of integers.  Using these values you must :
+    #   insert the first configData['m'] of them into the bloom filter
+    #   test all of them for membership in the bloom filter
+    bfInputData = util.readIntFileDat(configData['inFileName'])
+    if(len(bfInputData) == 0):
+        print('No Data to add to bloom filter')
+        return
+    else :
+        print('bfInputData has '+str(len(bfInputData)) +' elements')
+    #testBF will insert elements and test membership
+    outputResList = testBF(bfInputData, bf, configData['m'])            
+    #write results to output file
+    util.writeFileDat(configData['outFileName'],outputResList) '''
     
     print('Task 1 complete')
 

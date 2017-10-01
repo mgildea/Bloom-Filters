@@ -5,7 +5,7 @@
             "name": "Python",
             "type": "python",
             "request": "launch",
-            "stopOnEntry": true,
+            "stopOnEntry": false,
             "pythonPath": "${config:python.pythonPath}",
             "program": "${file}",
             "cwd": "${workspaceRoot}",
@@ -15,6 +15,18 @@
                 "WaitOnAbnormalExit",
                 "WaitOnNormalExit",
                 "RedirectOutput"
+            ],
+            "args" :[
+                "-c",
+                "${workspaceRoot}/testConfigHashType1.txt",
+                "-i",
+                "${workspaceRoot}/testInput.txt",
+                "-o",
+                "${workspaceRoot}/taskOutput.txt",
+                "-v",
+                "${workspaceRoot}/validResHashType1.txt",
+                "-t",
+                "2"
             ]
         },
         {

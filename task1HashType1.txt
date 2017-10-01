@@ -1,0 +1,14 @@
+#This file holds configuration data for your bloom filter
+#any line with a '#' as first character should be treated as a comment and ignored
+#Size of Universe
+N=2147483647
+#number of elements to add to bloom filter
+m=100000
+#Hash Function name/type
+name=Type 1 hash
+#size of hash table (must be prime and should be n << N)
+n=1917017
+#number of hashes to use in bloom filter
+k=1
+#Seed used to generate hash function seeds
+genSeed=877623067
