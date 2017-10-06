@@ -3,7 +3,7 @@
 #Size of Universe
 N=2147483647
 #number of elements to add to bloom filter
-m=100000
+m=200000
 #Hash Function name/type
 name=Type 1 hash
 #size of hash table (must be prime and should be n << N)
@@ -12,3 +12,5 @@ n=1917017
 k=1
 #Seed used to generate hash function seeds
 genSeed=877623067
+#number of tests to average over
+iterations=10

@@ -2,12 +2,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python",
+            "name": "Bloom",
             "type": "python",
             "request": "launch",
             "stopOnEntry": false,
             "pythonPath": "${config:python.pythonPath}",
-            "program": "${file}",
+            "program": "${workspaceRoot}/bloom.py",
             "cwd": "${workspaceRoot}",
             "env": {},
             "envFile": "${workspaceRoot}/.env",
@@ -18,7 +18,7 @@
             ],
             "args" :[
                 "-c",
-                "${workspaceRoot}/testConfigHashType1.txt",
+                "${workspaceRoot}/task1HashType1.txt",
                 "-i",
                 "${workspaceRoot}/testInput.txt",
                 "-o",
@@ -26,9 +26,26 @@
                 "-v",
                 "${workspaceRoot}/validResHashType1.txt",
                 "-t",
-                "2"
+                "1"
             ]
         },
+        {
+            "name": "Python",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": true,
+            "pythonPath": "${config:python.pythonPath}",
+            "program": "${file}",
+            "cwd": "${workspaceRoot}",
+            "env": {},
+            "envFile": "${workspaceRoot}/.env",
+            "debugOptions": [
+                "WaitOnAbnormalExit",
+                "WaitOnNormalExit",
+                "RedirectOutput"
+            ]
+        },
+        
         {
             "name": "PySpark",
             "type": "python",

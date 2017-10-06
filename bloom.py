@@ -29,7 +29,7 @@ class HashType1(object):
         if genHashes :
              #set random seed to be generated seed at config load
             random.seed(config['genSeed'])
-            self.seeds = random.randint(config['N'], size=self.k)
+            self.seeds = random.randint(config['N'], size=self.k).tolist()
           
             #build seed list self.seeds
             #pass
@@ -49,9 +49,14 @@ class HashType1(object):
 
         for seed in self.seeds:
             random.seed(seed + x)
-            
-        res = random.randint(self.n, size=self.k)
+            res.append(random.randint(0, self.n))
 
+
+        ''' for seed in self.seeds:
+            random.seed(seed + x)
+            
+        res = random.randint(self.n, size=self.k).tolist()
+ '''
         #your code goes here
         return res
 
@@ -77,8 +82,8 @@ class HashType2(object):
             random.seed(config['genSeed'])
             #build lists of coefficients self.a and self.b
 
-            self.a = random.randint(1, config['N'], size=self.k)
-            self.b = random.randint(0, config['N'], size=self.k)
+            self.a = random.randint(1, config['N'], size=self.k).tolist()
+            self.b = random.randint(0, config['N'], size=self.k).tolist()
 
         #if not gen (task 2), then use hashes that are in config dictionary
         else :
@@ -99,9 +104,13 @@ class HashType2(object):
         res = []
     
         for a,b in zip(self.a, self.b):
-            random.seed((((a * x) + b) % self.P) % self.n)
+        #for i in xrange(self.k):
+            res.append((((a * x) + b) % self.P) % self.n)
+            #random.seed((((a * x) + b) % self.P) % self.n)
+            #random.seed(((self.a[i] * x + self.b[i]) % self.P) % self.n)
+            #res.append(random.randint(0,self.n))
         
-        res = random.randint(self.n, size=self.k)
+       # res = random.randint(self.n, size=self.k).tolist()
         #your code goes here
         return res
     
@@ -223,6 +232,52 @@ def task2(configData):
     util.compareResults(outputResList,configData)    
     print('Task 2 complete')    
 
+
+
+def task1Tests(configData, inputData, hashType):
+    numTests = confiData['iterations']
+    results = [[0] * configData['n'] for x in xrange(numTests)]
+    stats = [None] * numTests
+
+    print hashType.__name__,'running',numTests,'tests of',configData['m'],'records each'
+
+    for result in results:
+        configData['genSeed'] =  random.randint(0, configData['N'])
+        hashFunc = hashType(configData,True)
+
+        for j in xrange(configData['m']):
+            for h in hashFunc.getHashList(inputData[j]):
+                result[h] = result[h] + 1
+
+    print('Done generating data')
+
+    return results
+
+def task1Stats(results):
+    
+    print('generating stats')
+    statistics = [dict() for x in xrange(len(results))]
+
+    for i,result in enumerate(results):
+        statistics[i]['maxCollisions'] = max(result)
+        #statistics[i][0] = maxCollisions
+
+        bucketUsage = [0]*(statistics[i]['maxCollisions'] + 1)
+        for j in result:
+            bucketUsage[j] = bucketUsage[j] + 1
+
+        statistics[i]['bucketUsage'] = bucketUsage
+
+        totalCollisions = 0
+        for j in xrange(len(statistics[i]['bucketUsage'])):
+            if(j > 1):
+                totalCollisions = totalCollisions + (statistics[i]['bucketUsage'][j])*(j-1)
+
+        statistics[i]['totalCollisions'] = totalCollisions
+
+    print('done generating stats')
+    return statistics
+
 """     
 these two functions are added for your convenience, if you choose to use this code to perform tasks 1 and 3
 """     
@@ -230,28 +285,35 @@ def task1(configData):
     #if you wish to use this code to perform task 1, you may do so
     #NOTE : task 1 does not require you to instantiate a bloom filter
     
-    #hashFunc1 = HashType1(configData, True)
-    #hashFunc2 = HashType2(configData, True)
-
-   # hashes1 = hashFunc1.getHashList(40)
-   # hashes2 = hashFunc2.getHashList(40)
-
-    ''' bf = BloomFilter(configData)    
-
-    #bfInputData holds a list of integers.  Using these values you must :
-    #   insert the first configData['m'] of them into the bloom filter
-    #   test all of them for membership in the bloom filter
     bfInputData = util.readIntFileDat(configData['inFileName'])
     if(len(bfInputData) == 0):
         print('No Data to add to bloom filter')
         return
     else :
         print('bfInputData has '+str(len(bfInputData)) +' elements')
-    #testBF will insert elements and test membership
-    outputResList = testBF(bfInputData, bf, configData['m'])            
-    #write results to output file
-    util.writeFileDat(configData['outFileName'],outputResList) '''
-    
+
+
+    type1Results = task1Stats(task1Tests(configData, bfInputData, HashType1))
+    type2Results = task1Stats(task1Tests(configData, bfInputData, HashType2))
+
+    #type1AveResults = dict()
+    total = 0
+    for result in type1Results:
+        total = total + result['totalCollisions']
+
+    type1AverageCollisions = total / len(type1Results)
+    print 'type 1 average collisions = ', type1AverageCollisions
+    print 'type 1 average collision rate = ', type1AverageCollisions / float(configData['m'])
+
+    total = 0
+    for result in type2Results:
+        total = total + result['totalCollisions']
+
+    type2AverageCollisions = total / len(type2Results)
+    print 'type 2 average collisions = ', type2AverageCollisions
+    print 'typ1 2 average collision rate = ', type2AverageCollisions / float(configData['m'])
+   
+
     print('Task 1 complete')
 
 def task3(configData):
