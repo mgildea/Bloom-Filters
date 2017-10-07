@@ -1,0 +1,10 @@
+{'maxCollisions': 3, 'bucketUsage': [1819574, 94933, 2463, 47], 'totalCollisions': 2557}
+{'maxCollisions': 4, 'bucketUsage': [1819674, 94730, 2570, 42, 1], 'totalCollisions': 2657}
+{'maxCollisions': 3, 'bucketUsage': [1819557, 94965, 2450, 45], 'totalCollisions': 2540}
+{'maxCollisions': 4, 'bucketUsage': [1819529, 95016, 2433, 38, 1], 'totalCollisions': 2512}
+{'maxCollisions': 3, 'bucketUsage': [1819533, 95008, 2436, 40], 'totalCollisions': 2516}
+{'maxCollisions': 3, 'bucketUsage': [1819653, 94769, 2554, 41], 'totalCollisions': 2636}
+{'maxCollisions': 3, 'bucketUsage': [1819510, 95058, 2405, 44], 'totalCollisions': 2493}
+{'maxCollisions': 4, 'bucketUsage': [1819485, 95099, 2399, 33, 1], 'totalCollisions': 2468}
+{'maxCollisions': 3, 'bucketUsage': [1819644, 94781, 2557, 35], 'totalCollisions': 2627}
+{'maxCollisions': 4, 'bucketUsage': [1819582, 94919, 2468, 47, 1], 'totalCollisions': 2565}

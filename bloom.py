@@ -235,25 +235,29 @@ def task2(configData):
 
 
 def task1Tests(configData, inputData, hashType):
-    numTests = confiData['iterations']
+    numTests = configData['iterations']
     results = [[0] * configData['n'] for x in xrange(numTests)]
     stats = [None] * numTests
 
     print hashType.__name__,'running',numTests,'tests of',configData['m'],'records each'
 
-    for result in results:
+    for i, result in enumerate(results):
+        hashList = []
         configData['genSeed'] =  random.randint(0, configData['N'])
         hashFunc = hashType(configData,True)
 
         for j in xrange(configData['m']):
             for h in hashFunc.getHashList(inputData[j]):
                 result[h] = result[h] + 1
+                hashList.append(h)
+
+        util.writeFileDat("task1Output/" + hashType.__name__ + "/Iter" + str(i) +".txt", hashList)
 
     print('Done generating data')
 
     return results
 
-def task1Stats(results):
+def task1Stats(results,hashType):
     
     print('generating stats')
     statistics = [dict() for x in xrange(len(results))]
@@ -261,12 +265,17 @@ def task1Stats(results):
     for i,result in enumerate(results):
         statistics[i]['maxCollisions'] = max(result)
         #statistics[i][0] = maxCollisions
+       
 
+        #hashList = []
         bucketUsage = [0]*(statistics[i]['maxCollisions'] + 1)
-        for j in result:
+        for k,j in enumerate(result):
             bucketUsage[j] = bucketUsage[j] + 1
+            #if(j > 0):
+            #    hashList.append(k)
 
         statistics[i]['bucketUsage'] = bucketUsage
+        #util.writeFileDat("task1Output/" + hashType.__name__ + "/Iter" + str(i) +".txt", hashList)
 
         totalCollisions = 0
         for j in xrange(len(statistics[i]['bucketUsage'])):
@@ -275,8 +284,15 @@ def task1Stats(results):
 
         statistics[i]['totalCollisions'] = totalCollisions
 
+   
+
     print('done generating stats')
     return statistics
+
+
+
+
+
 
 """     
 these two functions are added for your convenience, if you choose to use this code to perform tasks 1 and 3
@@ -292,9 +308,13 @@ def task1(configData):
     else :
         print('bfInputData has '+str(len(bfInputData)) +' elements')
 
+    task1Data = task1Tests(configData, bfInputData, HashType1)
+    type1Results = task1Stats(task1Data, HashType1)
+    util.writeFileDat("task1Output/" + HashType1.__name__ + "/Stats.txt", type1Results)
 
-    type1Results = task1Stats(task1Tests(configData, bfInputData, HashType1))
-    type2Results = task1Stats(task1Tests(configData, bfInputData, HashType2))
+    task2Data = task1Tests(configData, bfInputData, HashType2)
+    type2Results = task1Stats(task2Data, HashType2)
+    util.writeFileDat("task1Output/" + HashType2.__name__ + "/Stats.txt", type2Results)
 
     #type1AveResults = dict()
     total = 0
@@ -324,6 +344,27 @@ def task3(configData):
     #REMEMBER for type 2 hashes n must be prime.  util.findNextPrime(n) is provided for you to use to find the next largest
     #prime value of some integer.
     
+    bfInputData = util.readIntFileDat(configData['inFileName'])
+
+    for t in range(1,2):
+        print("Type " + str(t) + ":")
+        for c in xrange(10,15,5):
+            print("c = "+ str(c) + ":")
+            for k in range(4,10):
+                print("k = " + str(k) + ":")
+                configData['type'] = t
+                configData['k'] = k
+                configData['n'] = configData['m'] * c
+
+                for i in range(0,configData['iterations']):
+                    configData['genSeed'] =  random.randint(0, configData['N'])
+                    bf = BloomFilter(configData)
+                    outputResList = testBF(bfInputData, bf, configData['m'])  
+               
+
+          
+    
+
     
     print('Task 3 complete')    
     

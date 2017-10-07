@@ -22,11 +22,11 @@
                 "-i",
                 "${workspaceRoot}/testInput.txt",
                 "-o",
-                "${workspaceRoot}/taskOutput.txt",
+                "${workspaceRoot}/task2Output2.txt",
                 "-v",
-                "${workspaceRoot}/validResHashType1.txt",
+                "${workspaceRoot}/validResHashType2.txt",
                 "-t",
-                "1"
+                "3"
             ]
         },
         {

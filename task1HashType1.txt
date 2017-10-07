@@ -3,7 +3,7 @@
 #Size of Universe
 N=2147483647
 #number of elements to add to bloom filter
-m=200000
+m=100000
 #Hash Function name/type
 name=Type 1 hash
 #size of hash table (must be prime and should be n << N)
