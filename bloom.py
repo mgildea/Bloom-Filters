@@ -336,6 +336,26 @@ def task1(configData):
 
     print('Task 1 complete')
 
+
+def testTask3(data, bf, m):
+
+    numTests =  (len(data) - m)  
+    print("Adding " + str(m) + " distinct integers to bloom filter, then testing " + str(numTests) + " new integers")
+    fpCount = 0
+    for i,input in enumerate(data):
+        if(i < m):
+            bf.add(input)
+        else:
+            if bf.contains(input):
+                fpCount = fpCount + 1
+
+    fpRate = float(fpCount) / numTests          
+
+
+    print("False-Postive rate: " + str(fpRate))
+    return fpRate
+
+
 def task3(configData):
     #if you wish to use this code to perform task 3, you may do so
     #NOTE task 3 will require you to remake your bloom filter multiple times to perform the appropriate trials
@@ -346,26 +366,35 @@ def task3(configData):
     
     bfInputData = util.readIntFileDat(configData['inFileName'])
 
-    for t in range(1,2):
+    results = []
+    for t in range(1,3):
+     
         print("Type " + str(t) + ":")
-        for c in xrange(10,15,5):
+        for c in xrange(10,16,5):
+            result = dict()
+            result['Type'] = t
+            result['c'] = c
+            result['k-fpRate'] = []
             print("c = "+ str(c) + ":")
-            for k in range(4,10):
+            for k in range(4,11):
                 print("k = " + str(k) + ":")
                 configData['type'] = t
                 configData['k'] = k
-                configData['n'] = configData['m'] * c
+                configData['n'] = util.findNextPrime(configData['m'] * c)
 
+                cumFpRate = 0
                 for i in range(0,configData['iterations']):
                     configData['genSeed'] =  random.randint(0, configData['N'])
-                    bf = BloomFilter(configData)
-                    outputResList = testBF(bfInputData, bf, configData['m'])  
-               
+                    cumFpRate = cumFpRate + testTask3(bfInputData, BloomFilter(configData), configData['m'])
+                      
+                aveFpRate = cumFpRate / configData['iterations']
+                print("Type " + str(t) + ", c="+ str(c) +", k="+ str(k) + ", ave. fp rate=" + str(aveFpRate))
 
-          
-    
+                result['k-fpRate'].append(aveFpRate)
+            
+            results.append(result)
 
-    
+    util.writeFileDat("task3Output/results.txt", results)
     print('Task 3 complete')    
     
 
